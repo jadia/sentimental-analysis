@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="jumbotron">
+    <h2>Result: </h2>
+    <h1>{{ result }}
+    </h1>
+    <!-- Button to go back to the home -->
+    <button type="button" onclick="window.location.href='{{ url_for( 'index' ) }}';"
+        class="btn btn-danger btn-lg btn-block">Analyse more</button>
+    <!-- Flash messages  -->
+    <!-- {% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flashes>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %} -->
+</div>
+{% endblock %}
