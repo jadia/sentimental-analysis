@@ -7,9 +7,15 @@ from tweepy import OAuthHandler
 from tweepy import Stream
 # import creadentials
 import twitterCredentials
+# restrict amount of time extraction will be done for
+import time
+# format json for processing
+from formatJSON import formatJSON
 
 
 # class to stream tweets and stores it into a file
+
+
 class TwitterStreamer():
     """
     Class for streaming and processing live tweets
@@ -19,7 +25,7 @@ class TwitterStreamer():
     def stream_tweets(self, fetched_tweets_filename, hash_tag_list):
         # This handles Twitter authentication and the connection to the twitter streaming API.
         listener = StdOutListener(fetched_tweets_filename)
-    # OAuthHandler class from tweepy
+        # OAuthHandler class from tweepy
         auth = OAuthHandler(twitterCredentials.CONSUMER_KEY,
                             twitterCredentials.CONSUMER_SECRET)
         # to complete authentication
@@ -27,7 +33,7 @@ class TwitterStreamer():
                               twitterCredentials.ACCESS_TOKEN_SECRET)
         # create twitter stream from class Stream we imported
         # listener object deals with tweets and error
-        stream = Stream(auth, listener)
+        stream = Stream(auth, listener, tweet_mode='extended')
         # filter the tweets based on keywords using stream class filter method
         # feed track list with keywords
         stream.filter(track=hash_tag_list)
@@ -64,8 +70,11 @@ class StdOutListener(StreamListener):
 
 
 if __name__ == "__main__":
-    hash_tag_list = ['narendra modi', 'rahul gandhi', 'yogi adityanath']
+    hash_tag_list = ['narendra modi', 'amit shah', 'yogi adityanath']
     fetched_tweets_filename = "tweets.json"
-
+    tweetSaveFile = "tweets.json"
     twitter_streamer = TwitterStreamer()
     twitter_streamer.stream_tweets(fetched_tweets_filename, hash_tag_list)
+
+    obj1 = formatJSON(tweetSaveFile)
+    obj1.formatJSON()

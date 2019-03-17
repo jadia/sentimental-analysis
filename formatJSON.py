@@ -6,7 +6,8 @@ class formatJSON():
         self.fileName = fileName
 
     def formatJSON(self):
-        newJSON = open("newJSON.json", 'w')
+        path = "newJSON.json"
+        newJSON = open(path, 'w')
         newJSON.write('[ ')
         with open(self.fileName, 'r') as infile:
             data = infile.read()
