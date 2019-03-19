@@ -11,14 +11,17 @@ fileName = "UnstructTweets.json"
 def index():
     form = SearchBar(request.form)
 
-    if request.method == 'POST':
+    if request.method == 'POST' and form.validate():
         keyword = request.form['keyword']
         #flash('Requested keywords: {}'.format(keyword))
         keywordAsList = Keyword2List(keyword)
         analysis = TweepyUnitTest(keywordAsList.keyword2List())
         return render_template('result.html', keyword=keywordAsList, result=analysis.analyse())
     else:
-        #flash('Things not working out')
+        # keyword = request.form['keyword']
+        # if len(keyword) == 0:
+        #     invalid = 'Please provide input greater than '
+        #     return render_template('home.html', form=form, invalid=invalid)
         return render_template('home.html', form=form)
 
 
@@ -28,7 +31,7 @@ def getTweets(keyword):
 
 
 class SearchBar(Form):
-    keyword = StringField('Keyword', [validators.Length(min=1, max=50)])
+    keyword = StringField('Keyword', [validators.Length(min=2, max=50)])
 
 
 class Keyword2List():

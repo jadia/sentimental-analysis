@@ -10,7 +10,27 @@ import twitterCredentials
 # restrict amount of time extraction will be done for
 import time
 # format json for processing
-from formatJSON import formatJSON
+#from formatJSON import formatJSON
+import json
+
+
+# class to format extracted unstructured json
+class formatJSON():
+    def __init__(self, fileName):
+        self.fileName = fileName
+
+    def formatJSON(self):
+        path = "structTweets.json"
+        newJSON = open(path, 'w')
+        newJSON.write('[ ')
+        with open(self.fileName, 'r') as infile:
+            data = infile.read()
+            new_data = data.replace('}\n{', '},\n{')
+            json_data = json.loads(f'[{new_data}]')
+            print(json_data)
+            newJSON.write(new_data)
+        newJSON.write(' ]')
+        newJSON.close()
 
 
 # class to stream tweets and stores it into a file
@@ -83,5 +103,5 @@ if __name__ == "__main__":
     twitter_streamer.stream_tweets(fetched_tweets_filename, hash_tag_list)
 
 # format the saved tweets
-    obj1 = formatJSON(tweetSaveFile)
-    obj1.formatJSON()
+    formatJSON = formatJSON(tweetSaveFile)
+    formatJSON.formatJSON()
