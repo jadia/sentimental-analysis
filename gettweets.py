@@ -36,7 +36,7 @@ class TwitterStreamer():
         stream = Stream(auth, listener, tweet_mode='extended')
         # filter the tweets based on keywords using stream class filter method
         # feed track list with keywords
-        stream.filter(track=hash_tag_list)
+        stream.filter(languages=["en"], track=hash_tag_list)
 
 
 # Inheret from StreamListener class.
@@ -71,8 +71,8 @@ class StdOutListener(StreamListener):
 
 if __name__ == "__main__":
     hash_tag_list = ['narendra modi', 'amit shah', 'yogi adityanath']
-    fetched_tweets_filename = "tweets.json"
-    tweetSaveFile = "tweets.json"
+    fetched_tweets_filename = "UnstructTweets.json"
+    tweetSaveFile = "UnstructTweets.json"
     twitter_streamer = TwitterStreamer()
     twitter_streamer.stream_tweets(fetched_tweets_filename, hash_tag_list)
 
