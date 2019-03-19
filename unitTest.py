@@ -7,4 +7,6 @@ class TweepyUnitTest:
 
     def analyse(self):
         time.sleep(5)
-        return 'Analysis Result for %s' % self.keyword
+        # str1 = ''.join(self.keyword)
+        # return str1
+        return self.keyword

@@ -12,9 +12,10 @@ def index():
 
     if request.method == 'POST':
         keyword = request.form['keyword']
-        flash('Requested keywords: {}'.format(keyword))
-        analysis = TweepyUnitTest(keyword)
-        return render_template('result.html', keyword=keyword, result=analysis.analyse())
+        #flash('Requested keywords: {}'.format(keyword))
+        keywordAsList = Keyword2List(keyword)
+        analysis = TweepyUnitTest(keywordAsList.keyword2List())
+        return render_template('result.html', keyword=keywordAsList, result=analysis.analyse())
     else:
         #flash('Things not working out')
         return render_template('home.html', form=form)
@@ -27,6 +28,14 @@ def getTweets(keyword):
 
 class SearchBar(Form):
     keyword = StringField('Keyword', [validators.Length(min=1, max=50)])
+
+
+class Keyword2List():
+    def __init__(self, keyword):
+        self.keyword = keyword
+
+    def keyword2List(self):
+        return(self.keyword.split(','))
 
 
 if __name__ == "__main__":

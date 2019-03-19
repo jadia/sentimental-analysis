@@ -2,9 +2,11 @@
 
 {% block body %}
 <div class="jumbotron">
-    <h2>Result: </h2>
-    <h1>{{ result }}
-    </h1>
+    <h1>Result: </h1>
+    <h3>{% for x in result %}
+        <br>{{ x }}
+        {% endfor %}
+    </h3>
     <!-- Button to go back to the home -->
     <button type="button" onclick="window.location.href='{{ url_for( 'index' ) }}';"
         class="btn btn-danger btn-lg btn-block">Analyse more</button>
