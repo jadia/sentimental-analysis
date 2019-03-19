@@ -48,8 +48,10 @@ class StdOutListener(StreamListener):
 
     # constructor
 
-    def __init__(self, fetched_tweets_filename):
+    def __init__(self, fetched_tweets_filename, timeLimit=10):
         self.fetched_tweets_filename = fetched_tweets_filename
+        self.startTime = time.time()
+        self.limit = timeLimit
 
     # StreamListener method which can be overridden
     # take data from stream listner
@@ -58,8 +60,12 @@ class StdOutListener(StreamListener):
         try:
             print(data)  # print data we got.
             with open(self.fetched_tweets_filename, 'a') as tf:
-                tf.write(data)
-            return True
+                if (time.time() - self.startTime) < self.limit:
+                    tf.write(data)
+                    return True
+                else:
+                    tf.close()
+                    return False
         except BaseException as e:
             # print error and exception
             print("Error on data: %s" % str(e))

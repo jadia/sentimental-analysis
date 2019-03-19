@@ -6,7 +6,7 @@ class formatJSON():
         self.fileName = fileName
 
     def formatJSON(self):
-        path = "newJSON.json"
+        path = "structTweets.json"
         newJSON = open(path, 'w')
         newJSON.write('[ ')
         with open(self.fileName, 'r') as infile:

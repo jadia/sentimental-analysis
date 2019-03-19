@@ -4,6 +4,7 @@ from unitTest import TweepyUnitTest
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'SjdnUends821Jsdlkvxh391ksdODnejdDw'
+fileName = "UnstructTweets.json"
 
 
 @app.route('/', methods=['GET', 'POST'])
