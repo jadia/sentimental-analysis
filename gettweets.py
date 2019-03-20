@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# check file exist
+import os
 # listen to the tweets
 from tweepy.streaming import StreamListener
 # auth the twitter account
@@ -14,13 +16,21 @@ import time
 import json
 
 
+# stub
+from stub import TweepyStub
+
+
 # class to format extracted unstructured json
+
+
 class formatJSON():
     def __init__(self, fileName):
         self.fileName = fileName
 
     def formatJSON(self):
         path = "structTweets.json"
+        if os.path.exists(path):
+            os.remove(path)
         newJSON = open(path, 'w')
         newJSON.write('[ ')
         with open(self.fileName, 'r') as infile:
@@ -91,17 +101,43 @@ class StdOutListener(StreamListener):
             print("Error on data: %s" % str(e))
 
     # method from StreamListener, invoke on error
+
     def on_error(self, status):
         print(status)
+        raise Exception('Some error occured.')
+
+
+class AutomateAll(StdOutListener, formatJSON):
+    def __init__(self, keywordList):
+        self.keywordList = keywordList
+
+    def extractStructTweets(self):
+        try:
+            unStructFile = "UnstructTweets.json"
+            if os.path.exists(unStructFile):
+                os.remove(unStructFile)
+            twitterStreamer = TwitterStreamer()
+            twitterStreamer.stream_tweets(unStructFile, self.keywordList)
+            if os.stat(unStructFile).st_size == 0:
+                # file is empty
+                list = ['Tweets could not be fetched! Please try again later.', '']
+                return list
+            format = formatJSON(unStructFile)
+            format.formatJSON()
+            stub = TweepyStub()
+            return stub.analyse()
+        except:
+            list = ['Something went wrong, please try again later.', '']
+            return list
 
 
 if __name__ == "__main__":
     hash_tag_list = ['narendra modi', 'amit shah', 'yogi adityanath']
     fetched_tweets_filename = "UnstructTweets.json"
-    tweetSaveFile = "UnstructTweets.json"
     twitter_streamer = TwitterStreamer()
     twitter_streamer.stream_tweets(fetched_tweets_filename, hash_tag_list)
 
 # format the saved tweets
-    formatJSON = formatJSON(tweetSaveFile)
-    formatJSON.formatJSON()
+    # tweetSaveFile = "UnstructTweets.json"
+    # formatJSON = formatJSON(tweetSaveFile)
+    # formatJSON.formatJSON()

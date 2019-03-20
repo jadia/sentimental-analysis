@@ -3,21 +3,29 @@
 {% block body %}
 {% from "includes/_formhelpers.html" import render_field %}
 <div class="jumbotron text-center">
+    <style>
+        h1 {
+            font-family: 'Allerta Stencil';
+            font-size: 68px;
+            color: #491c2b;
+        }
+    </style>
     <h1>Sentimental Analysis</h1> <br />
     <!-- Search form -->
     <style>
         .active-pink-4 input[type=text]:focus:not([readonly]) {
             border: 1px solid #f48fb1;
-            box-shadow: 0 0 0 1px #f48fb1;
+            box-shadow: 0 0 0 1.5px #f48fb1;
         }
     </style>
+    <p> <b>Note:</b> Keywords must be greater than 2 characters.</p>
     <!-- Search form -->
 
     <form method="POST" action="">
         {{ form.csrf }}
         <div class="active-pink-3 active-pink-4 mb-4">
             <input class="form-control" id="keyword" name="keyword" type="text"
-                placeholder="Keywords separated by commas (,)" aria-label="Search">
+                placeholder="Keywords separated by commas (,) and press return to analyse." aria-label="Search">
         </div>
     </form>
     <!-- spinner when tweets are extracted in the background -->
