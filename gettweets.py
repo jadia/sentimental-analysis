@@ -18,7 +18,7 @@ import json
 
 # stub
 from stub import TweepyStub
-
+from sentiment_analysis import *
 
 # class to format extracted unstructured json
 
@@ -31,6 +31,7 @@ class formatJSON():
         path = "structTweets.json"
         if os.path.exists(path):
             os.remove(path)
+            print("struct file deleted")
         newJSON = open(path, 'w')
         newJSON.write('[ ')
         with open(self.fileName, 'r') as infile:
@@ -78,7 +79,7 @@ class StdOutListener(StreamListener):
 
     # constructor
 
-    def __init__(self, fetched_tweets_filename, timeLimit=10):
+    def __init__(self, fetched_tweets_filename, timeLimit=20):
         self.fetched_tweets_filename = fetched_tweets_filename
         self.startTime = time.time()
         self.limit = timeLimit
@@ -116,6 +117,7 @@ class AutomateAll(StdOutListener, formatJSON):
             unStructFile = "UnstructTweets.json"
             if os.path.exists(unStructFile):
                 os.remove(unStructFile)
+                print("unstruct file deleted")
             twitterStreamer = TwitterStreamer()
             twitterStreamer.stream_tweets(unStructFile, self.keywordList)
             if os.stat(unStructFile).st_size == 0:
@@ -124,9 +126,13 @@ class AutomateAll(StdOutListener, formatJSON):
                 return list
             format = formatJSON(unStructFile)
             format.formatJSON()
-            stub = TweepyStub()
-            return stub.analyse()
-        except:
+            # stub = TweepyStub()
+            # return stub.analyse()
+            # Vivek's function
+            customer = sentiment_Analysis()
+            return customer.getResult()
+        except Exception as e:
+            print(e)
             list = ['Something went wrong, please try again later.', '']
             return list
 

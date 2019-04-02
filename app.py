@@ -28,7 +28,8 @@ def index():
 
 @app.route('/<keyword>')
 def getTweets(keyword):
-    return 'Keywords are: %s' % keyword
+    return '404 not found'
+    # return 'Keywords are: %s' % keyword
 
 
 class SearchBar(Form):

@@ -6,25 +6,35 @@
     <style>
         h1 {
             font-family: 'Allerta Stencil';
-            font-size: 68px;
-            color: #491c2b;
+            font-size: 86px;
+            color: #192a56;
+            /* color: #491c2b; */
         }
     </style>
-    <h1>Sentimental Analysis</h1> <br />
+    <h1 class="senti">Sentimental Analysis</h1> <br />
     <!-- Search form -->
     <style>
         .active-pink-4 input[type=text]:focus:not([readonly]) {
-            border: 1px solid #f48fb1;
-            box-shadow: 0 0 0 1.5px #f48fb1;
+            border: 1px solid #4cd137;
+            box-shadow: 0 0 0 1px #4cd137;
+            /* #f76293 */
+        }
+
+        .active-pink-4 input[type=text]:hover:not([readonly]) {
+            border: 1px solid #f13272;
+            box-shadow: 0 0 0 1px #f13272;
+            /* #f48fb1 */
         }
     </style>
-    <p> <b>Note:</b> Keywords must be greater than 2 characters.</p>
+    <div class="text-center">
+        <p> <b>Note:</b> Keywords must be greater than 2 characters.</p>
+    </div>
     <!-- Search form -->
 
     <form method="POST" action="">
         {{ form.csrf }}
         <div class="active-pink-3 active-pink-4 mb-4">
-            <input class="form-control" id="keyword" name="keyword" type="text"
+            <input class="form-control text-center" id="keyword" name="keyword" type="text"
                 placeholder="Keywords separated by commas (,) and press return to analyse." aria-label="Search">
         </div>
     </form>
