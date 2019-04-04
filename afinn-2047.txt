@@ -2538,3 +2538,5 @@ brutal -1
 narcissistic -1
 humiliated -1
 humiliate -1
+naamdar -1
+kaamdar +1
