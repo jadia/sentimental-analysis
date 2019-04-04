@@ -1,6 +1,11 @@
 # Custom
 **/twitterCredentials.py
 *.json
+calculate_polarity.txt
+Tweets_extracted.txt
+doanalysation.py
+filter.py
+projectfiles.zip
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
