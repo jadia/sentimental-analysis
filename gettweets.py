@@ -15,13 +15,38 @@ import time
 #from formatJSON import formatJSON
 import json
 
-
+# for checking input
+import re
 # stub
-from stub import TweepyStub
+#from stub import TweepyStub
+
 from sentiment_analysis import *
 
-# class to format extracted unstructured json
+# class to filter the input list
 
+
+class Filter():
+    def __init__(self, list):
+        self.list = list
+
+    def filter(self):
+        flag = 0
+        for i in range(len(self.list)):
+            valid_st = re.sub(r'[^0-9a-zA-Z]', '', self.list[i])
+            if(len(valid_st) == 0):
+                flag = 1
+            if(len(valid_st) == 1):
+                flag = 1
+
+        if(flag == 1):
+            print("Invalid input!")
+            return False
+        if(flag == 0):
+            print("Valid input!")
+            return True
+
+
+# class to format extracted unstructured json
 
 class formatJSON():
     def __init__(self, fileName):
@@ -79,7 +104,7 @@ class StdOutListener(StreamListener):
 
     # constructor
 
-    def __init__(self, fetched_tweets_filename, timeLimit=20):
+    def __init__(self, fetched_tweets_filename, timeLimit=5):
         self.fetched_tweets_filename = fetched_tweets_filename
         self.startTime = time.time()
         self.limit = timeLimit
@@ -114,6 +139,10 @@ class AutomateAll(StdOutListener, formatJSON):
 
     def extractStructTweets(self):
         try:
+            filter = Filter(self.keywordList)
+            if not filter.filter():
+                list = ['Invalid input. Try again.', '']
+                return list
             unStructFile = "UnstructTweets.json"
             if os.path.exists(unStructFile):
                 os.remove(unStructFile)
@@ -122,18 +151,17 @@ class AutomateAll(StdOutListener, formatJSON):
             twitterStreamer.stream_tweets(unStructFile, self.keywordList)
             if os.stat(unStructFile).st_size == 0:
                 # file is empty
-                list = ['Tweets could not be fetched! Please try again later.', '']
+                list = [
+                    'Not enough people are tweeting on this topic. Please try again later.', '']
                 return list
             format = formatJSON(unStructFile)
             format.formatJSON()
-            # stub = TweepyStub()
-            # return stub.analyse()
             # Vivek's function
             customer = sentiment_Analysis()
             return customer.getResult()
         except Exception as e:
             print(e)
-            list = ['Something went wrong, please try again later.', '']
+            list = ['Oops, twitter blocked our request, please try again later.', '']
             return list
 
 
