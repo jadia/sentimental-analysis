@@ -26,9 +26,9 @@ def index():
         return render_template('home.html', form=form)
 
 
-@app.route('/<keyword>')
-def getTweets(keyword):
-    return '404 not found'
+@app.route('/<wrongAddr>')
+def show404(wrongAddr):
+    return render_template('404.html')
     # return 'Keywords are: %s' % keyword
 
 
