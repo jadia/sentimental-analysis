@@ -1,6 +1,6 @@
-from flask import Flask, render_template, flash, redirect, flash, url_for, session, logging, request
+from flask import Flask, render_template, flash, redirect, flash, url_for, session, logging, request, jsonify, make_response
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
-from gettweets import AutomateAll
+from gettweets import AutomateAll, API
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'SjdnUends821Jsdlkvxh391ksdODnejdDw'
@@ -26,10 +26,22 @@ def index():
         return render_template('home.html', form=form)
 
 
-@app.route('/<wrongAddr>')
-def show404(wrongAddr):
-    return render_template('404.html')
-    # return 'Keywords are: %s' % keyword
+@app.route('/api/<keyword>', methods=['GET'])
+def get_tasks(keyword):
+    keywordToList = Keyword2ListAPI(keyword)
+    apiCall = API(keywordToList.keyword2List())
+    apiReturn = apiCall.jsonAnalysis()
+    if len(apiReturn) == 1:
+        return jsonify(apiReturn), 200
+    else:
+        return make_response(jsonify({'error': 'Request not successful'}), 400)
+
+    # return '%s' % apiReturn
+
+# @app.route('/<wrongAddr>')
+# def show404(wrongAddr):
+#     return render_template('404.html')
+#     # return 'Keywords are: %s' % keyword
 
 
 class SearchBar(Form):
@@ -41,6 +53,15 @@ class Keyword2List():
         self.keyword = keyword
 
     def keyword2List(self):
+        return(self.keyword.split(','))
+
+
+class Keyword2ListAPI():
+    def __init__(self, keyword):
+        self.keyword = keyword
+
+    def keyword2List(self):
+        self.keyword.replace("%20", " ")
         return(self.keyword.split(','))
 
 

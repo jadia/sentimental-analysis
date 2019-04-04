@@ -104,7 +104,7 @@ class StdOutListener(StreamListener):
 
     # constructor
 
-    def __init__(self, fetched_tweets_filename, timeLimit=5):
+    def __init__(self, fetched_tweets_filename, timeLimit=20):
         self.fetched_tweets_filename = fetched_tweets_filename
         self.startTime = time.time()
         self.limit = timeLimit
@@ -115,13 +115,17 @@ class StdOutListener(StreamListener):
     def on_data(self, data):
         try:
             print(data)  # print data we got.
-            with open(self.fetched_tweets_filename, 'a') as tf:
-                if (time.time() - self.startTime) < self.limit:
-                    tf.write(data)
-                    return True
-                else:
-                    tf.close()
-                    return False
+            if (time.time() - self.startTime) < self.limit:
+                with open(self.fetched_tweets_filename, 'a') as tf:
+                    if (time.time() - self.startTime) < self.limit:
+                        tf.write(data)
+                        return True
+                    else:
+                        tf.close()
+                        return False
+            else:
+                print("Nothing retrived")
+                return False
         except BaseException as e:
             # print error and exception
             print("Error on data: %s" % str(e))
@@ -148,7 +152,9 @@ class AutomateAll(StdOutListener, formatJSON):
                 os.remove(unStructFile)
                 print("unstruct file deleted")
             twitterStreamer = TwitterStreamer()
+            print("twitter streamer start")
             twitterStreamer.stream_tweets(unStructFile, self.keywordList)
+            print("twitter streamer done")
             if os.stat(unStructFile).st_size == 0:
                 # file is empty
                 list = [
@@ -163,6 +169,77 @@ class AutomateAll(StdOutListener, formatJSON):
             print(e)
             list = ['Oops, twitter blocked our request, please try again later.', '']
             return list
+
+
+class API(StdOutListener, formatJSON):
+    def __init__(self, keywordList):
+        self.keywordList = keywordList
+
+    def toJSON(self, list):
+        # convert list to dictionary and then json
+        if len(list) == 4:
+            x = [
+                {
+                    'analysis':
+                    {
+                        'positive': list[0],
+                        'neutral': list[1],
+                        'negative': list[2],
+                        'verdict': list[3]
+                    }
+                }
+            ]
+            # x = {}
+            # x["positive"] = list[0]
+            # x["neutral"] = list[1]
+            # x["negative"] = list[2]
+            # x["verdict"] = list[3]
+        else:
+            x = [
+                {
+                    'error':
+                    {
+                        list[0]
+                    }
+                }
+            ]
+        print("Json dumps print")
+        print(json.dumps(x))
+        print(type(x))
+        print(type(json.dumps(x)))
+        # return json.dumps(x)
+        return x
+
+    def jsonAnalysis(self):
+        try:
+            filter = Filter(self.keywordList)
+            if not filter.filter():
+                list = ['Invalid input. Try again.']
+                return self.toJSON(list)
+            unStructFile = "UnstructTweets.json"
+            if os.path.exists(unStructFile):
+                os.remove(unStructFile)
+                print("unstruct file deleted")
+            twitterStreamer = TwitterStreamer()
+            print("twitter streamer start")
+            print("keywords: ")
+            print(self.keywordList)
+            twitterStreamer.stream_tweets(unStructFile, self.keywordList)
+            print("twitter streamer done")
+            if os.stat(unStructFile).st_size == 0:
+                # file is empty
+                list = [
+                    'Not enough people are tweeting on this topic. Please try again later.']
+                return self.toJSON(list)
+            format = formatJSON(unStructFile)
+            format.formatJSON()
+            # Vivek's function
+            customer = sentiment_Analysis()
+            return self.toJSON(customer.getResult())
+        except Exception as e:
+            print(e)
+            list = ['Oops, twitter blocked our request, please try again later.']
+            return self.toJSON(list)
 
 
 if __name__ == "__main__":

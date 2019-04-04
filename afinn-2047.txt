@@ -2534,3 +2534,7 @@ presstitutes -3
 presstitute -3
 iok -2
 occupied -1
+brutal -1
+narcissistic -1
+humiliated -1
+humiliate -1

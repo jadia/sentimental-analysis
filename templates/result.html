@@ -2,12 +2,26 @@
 
 {% block body %}
 <div class="jumbotron">
-    <h3>
-        <!-- {{ result }} -->
+    <!-- <h3>
         {% for x in result %}
         <br><br>{{ x }}
         {% endfor %}
+    </h3> -->
+    <h3>
+        {% if result|length == 4 %}
+        Positive: {{ result[0] }}
+        <br>
+        Neutral: {{ result[1] }}
+        <br>
+        Negative: {{ result[2] }}
+        <br>
+        <br>
     </h3>
+    <h2>Verdict: <b>{{ result[3] }} </b></h2>
+    {% endif %}
+    {% if result|length == 2 %}
+    <h3> {{result[0]}} </h3>
+    {% endif %}
     <br>
     <!-- Button to go back to the home -->
     <button type="button" onclick="window.location.href='{{ url_for( 'index' ) }}';"
