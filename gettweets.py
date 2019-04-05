@@ -178,31 +178,28 @@ class API(StdOutListener, formatJSON):
     def toJSON(self, list):
         # convert list to dictionary and then json
         if len(list) == 4:
-            x = [
-                {
-                    'analysis':
+            x = {
+                'analysis':
                     {
                         'positive': list[0],
                         'neutral': list[1],
                         'negative': list[2],
                         'verdict': list[3]
                     }
-                }
-            ]
+            }
             # x = {}
             # x["positive"] = list[0]
             # x["neutral"] = list[1]
             # x["negative"] = list[2]
             # x["verdict"] = list[3]
         else:
-            x = [
-                {
-                    'error':
+            x = {
+                'error':
                     {
                         list[0]
                     }
-                }
-            ]
+            }
+
         print("Json dumps print")
         print(json.dumps(x))
         print(type(x))
